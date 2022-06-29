@@ -5,7 +5,7 @@ using UnityEngine;
 using Cinemachine;
 using System;
 
-namespace CineShaker
+namespace CinemachineShaker
 {
     [Serializable]
     public class CineShaker : MonoBehaviour
@@ -18,8 +18,9 @@ namespace CineShaker
 #endif
 
         [SerializeField] private CinemachineBrain brain;
-        [SerializeField] private ShakeOptions shakeOptions;
+        [SerializeField] private ShakeOptions defaultShakeOptions;
 
+        private ShakeOptions currentShakeOptions;
         private CinemachineBasicMultiChannelPerlin noise;
         private float shakeDuration;
         private float shakeAmplitude;
@@ -38,7 +39,7 @@ namespace CineShaker
 
             if (shakeDuration > 0f)
             {
-                shakeOptions.GetAmplitudeAndFrequency(shakeDuration, out shakeAmplitude, out shakeFrequency);
+                defaultShakeOptions.GetAmplitudeAndFrequency(shakeDuration, out shakeAmplitude, out shakeFrequency);
                 noise.m_FrequencyGain = shakeFrequency;
                 noise.m_AmplitudeGain = shakeAmplitude;
                 shakeDuration -= Time.deltaTime;
@@ -52,7 +53,7 @@ namespace CineShaker
 
         public void Shake()
         {
-            Shake(shakeOptions);
+            Shake(defaultShakeOptions);
         }
 
         public void Shake(ShakeOptions _options)
@@ -64,10 +65,10 @@ namespace CineShaker
                 LoadCameraNoise();
 
             shakeDuration = _options.shakeDuration;
-            shakeOptions = _options;
+            currentShakeOptions = _options;
         }
 
-        private void LoadBrain()
+        private void LoadCinemachineBrain()
         {
             brain = Camera.main.GetComponent<CinemachineBrain>();
 
@@ -81,7 +82,7 @@ namespace CineShaker
         private void LoadCameraNoise()
         {
             if (!brain)
-                LoadBrain();
+                LoadCinemachineBrain();
 
             ICinemachineCamera cam = brain.ActiveVirtualCamera;
 
@@ -110,9 +111,9 @@ namespace CineShaker
             }
         }
 
-        public void SetOptions(ShakeOptions _options)
+        public void SetNewDefaultOptions(ShakeOptions _options)
         {
-            shakeOptions = _options;
+            defaultShakeOptions = _options;
         }
     }
 

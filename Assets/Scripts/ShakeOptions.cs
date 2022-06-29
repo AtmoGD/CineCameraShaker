@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace CineShaker
+namespace CinemachineShaker
 {
     [Serializable]
     [CreateAssetMenu(fileName = "ShakeSettings", menuName = "CineShaker/New shake settings")]
